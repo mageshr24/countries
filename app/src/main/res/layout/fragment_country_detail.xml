@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:shimmer="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/countryDetailToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="@style/ToolbarTheme"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:titleTextAppearance="@style/Toolbar.TitleText" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/countryDetailsShimmerFL"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            shimmer:duration="700">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <include layout="@layout/country_details_shimmereffect" />
+
+            </LinearLayout>
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/countryDetailsCL"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/imageLinear"
+                android:layout_width="0dp"
+                android:layout_height="190dp"
+                android:background="@color/colorItemBg"
+                android:padding="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/countryimage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY"
+                    android:transitionName="countryFlag"
+                    tools:srcCompat="@tools:sample/avatars" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/countryName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/poppins_semibold"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_large_10"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imageLinear"
+                tools:text="India" />
+
+            <TextView
+                android:id="@+id/capitalName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/large_100"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/poppins_medium"
+                android:text="Capital"
+                android:textColor="@color/colorHeadingText"
+                android:textSize="@dimen/text_small_50"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/countryName" />
+
+            <TextView
+                android:id="@+id/capitalNameData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="@dimen/large_100"
+                android:fontFamily="@font/pppins_regular"
+                android:textColor="@color/colorHeadingText"
+                android:textSize="@dimen/text_small_50"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/countryName"
+                tools:text="-" />
+
+            <TextView
+                android:id="@+id/region"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/large_100"
+                android:layout_marginTop="@dimen/normal_100"
+                android:fontFamily="@font/poppins_medium"
+                android:text="Region"
+                android:textColor="@color/colorHeadingText"
+                android:textSize="@dimen/text_small_50"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/capitalName" />
+
+            <TextView
+                android:id="@+id/regionData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/normal_100"
+                android:layout_marginEnd="@dimen/large_100"
+                android:fontFamily="@font/pppins_regular"
+                android:textColor="@color/colorHeadingText"
+                android:textSize="@dimen/text_small_50"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/capitalNameData"
+                tools:text="-" />
+
+            <TextView
+                android:id="@+id/currency"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/large_100"
+                android:layout_marginTop="@dimen/normal_100"
+                android:fontFamily="@font/poppins_medium"
+                android:text="Currency"
+                android:textColor="@color/colorHeadingText"
+                android:textSize="@dimen/text_small_50"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/region" />
+
+            <TextView
+                android:id="@+id/language"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/large_100"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/poppins_medium"
+                android:text="Language"
+                android:textColor="@color/colorHeadingText"
+                android:textSize="@dimen/text_small_50"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/currency" />
+
+            <TextView
+                android:id="@+id/languageData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="@dimen/large_100"
+                android:fontFamily="@font/pppins_regular"
+                android:textColor="@color/colorHeadingText"
+                android:textSize="@dimen/text_small_50"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/currencyData"
+                tools:text="-" />
+
+            <TextView
+                android:id="@+id/currencyData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/normal_100"
+                android:layout_marginEnd="@dimen/large_100"
+                android:fontFamily="@font/pppins_regular"
+                android:textColor="@color/colorHeadingText"
+                android:textSize="@dimen/text_small_50"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/regionData"
+                tools:text="-" />
+
+            <LinearLayout
+                android:id="@+id/airPollutionLinear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/language">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/airPollutionText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/large_100"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:text="Air pollution"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorHeadingText"
+                        android:textSize="@dimen/text_small_50"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/carbonText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/large_100"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="Carbon monoxide (CO)"
+                        android:textColor="@color/colorHeadingText"
+                        android:textSize="@dimen/text_small_50"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/airPollutionText" />
+
+                    <TextView
+                        android:id="@+id/carbonData"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/large_100"
+                        android:fontFamily="@font/pppins_regular"
+                        android:text="-"
+                        android:textColor="@color/colorHeadingText"
+                        android:textSize="@dimen/text_small_50"
+                        app:layout_constraintBottom_toBottomOf="@+id/carbonText"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/carbonText"
+                        app:layout_constraintVertical_bias="0.0" />
+
+                    <TextView
+                        android:id="@+id/nitrogenText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/large_100"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="Nitrogen dioxide(NO2)"
+                        android:textColor="@color/colorHeadingText"
+                        android:textSize="@dimen/text_small_50"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/carbonText" />
+
+                    <TextView
+                        android:id="@+id/nitrogenData"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/large_100"
+                        android:fontFamily="@font/pppins_regular"
+                        android:text="-"
+                        android:textColor="@color/colorHeadingText"
+                        android:textSize="@dimen/text_small_50"
+                        app:layout_constraintBottom_toBottomOf="@+id/nitrogenText"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/nitrogenText"
+                        app:layout_constraintVertical_bias="0.0" />
+
+                    <TextView
+                        android:id="@+id/ozoneText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/large_100"
+                        android:layout_marginTop="12dp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="Ozone(O3)"
+                        android:textColor="@color/colorHeadingText"
+                        android:textSize="@dimen/text_small_50"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/nitrogenText" />
+
+                    <TextView
+                        android:id="@+id/ozoneData"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="@dimen/large_100"
+                        android:fontFamily="@font/pppins_regular"
+                        android:text="-"
+                        android:textColor="@color/colorHeadingText"
+                        android:textSize="@dimen/text_small_50"
+                        app:layout_constraintBottom_toBottomOf="@+id/ozoneText"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/ozoneText" />
+
+                    <TextView
+                        android:id="@+id/sulphurText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/large_100"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="Sulphur dioxide(SO2)"
+                        android:textColor="@color/colorHeadingText"
+                        android:textSize="@dimen/text_small_50"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ozoneText" />
+
+                    <TextView
+                        android:id="@+id/sulphurData"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:layout_marginEnd="@dimen/large_100"
+                        android:fontFamily="@font/pppins_regular"
+                        android:text="-"
+                        android:textColor="@color/colorHeadingText"
+                        android:textSize="@dimen/text_small_50"
+                        app:layout_constraintBottom_toBottomOf="@+id/sulphurText"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/sulphurText"
+                        app:layout_constraintVertical_bias="1.0" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
