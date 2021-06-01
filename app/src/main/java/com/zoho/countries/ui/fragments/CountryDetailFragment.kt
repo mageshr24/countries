@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.zoho.countries.R
 import com.zoho.countries.databinding.FragmentCountryDetailBinding
+import com.zoho.countries.datasource.local.entities.ItemData
 import com.zoho.countries.datasource.local.entities.airPollution.AirPollution
 import com.zoho.countries.datasource.local.entities.country.Countries
 import com.zoho.countries.utils.Resource
@@ -22,8 +23,8 @@ import timber.log.Timber
 
 @AndroidEntryPoint
 class CountryDetailFragment : Fragment() {
-    private var countryDetailBinding : FragmentCountryDetailBinding by autoCleared()
-    private val countryDetailViewModel : CountryDetailViewModel by viewModels()
+    private var countryDetailBinding: FragmentCountryDetailBinding by autoCleared()
+    private val countryDetailViewModel: CountryDetailViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,10 +40,14 @@ class CountryDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        arguments?.getString("countryName")?.let { countryDetailViewModel.start(it) }
-        arguments?.getIntegerArrayList("latlng")?.let {
-            Timber.v("latlng : " + it)
-            getAirPollutionData(it[0].toDouble(), it[1].toDouble())
+
+        arguments?.getParcelable<ItemData>("itemData")?.let {
+
+            it.countryName?.let { data -> countryDetailViewModel.start(data) }
+
+            if (!it.latitude.equals(0.0) && !it.longitude.equals(0.0)) {
+                getAirPollutionData(it.latitude, it.longitude)
+            }
         }
 
         getCountryDetails()
@@ -53,6 +58,7 @@ class CountryDetailFragment : Fragment() {
             bindCountryData(it!!)
         })
     }
+
     private fun bindCountryData(countries: Countries) {
 
         countryDetailBinding.countryimage.loadSvg(countries.flag.toString())
@@ -96,7 +102,7 @@ class CountryDetailFragment : Fragment() {
     private fun setupBackButton() {
         val navController = findNavController()
 
-        countryDetailBinding.countryDetailToolbar.setNavigationIcon (R.drawable.ic_back_button)
+        countryDetailBinding.countryDetailToolbar.setNavigationIcon(R.drawable.ic_back_button)
         countryDetailBinding.countryDetailToolbar.setTitle("Country Details")
         countryDetailBinding.countryDetailToolbar.setNavigationOnClickListener(View.OnClickListener { requireActivity().onBackPressed() })
 
@@ -111,57 +117,62 @@ class CountryDetailFragment : Fragment() {
 
     private fun getAirPollutionData(latitude: Double, longitude: Double) {
 
-        countryDetailViewModel.getAirPollution(latitude, longitude).observe(viewLifecycleOwner, Observer {
+        countryDetailViewModel.getAirPollution(latitude, longitude)
+            .observe(viewLifecycleOwner, Observer {
 
-            when (it.status) {
-                Resource.Status.SUCCESS -> {
-                    it.data?.let {
-                        Timber.v("" + it)
-                        countryDetailBinding.countryDetailsShimmerFL?.stopShimmerAnimation()
-                        countryDetailBinding.countryDetailsShimmerFL.visibility = View.GONE
-                        countryDetailBinding.countryDetailsCL.visibility = View.VISIBLE
-                        bindAirpollutionData(it!!)
+                when (it.status) {
+                    Resource.Status.SUCCESS -> {
+                        it.data?.let {
+                            Timber.v("" + it)
+                            countryDetailBinding.countryDetailsShimmerFL?.stopShimmerAnimation()
+                            countryDetailBinding.countryDetailsShimmerFL.visibility = View.GONE
+                            countryDetailBinding.countryDetailsCL.visibility = View.VISIBLE
+                            bindAirpollutionData(it!!)
+                        }
                     }
-                }
-                Resource.Status.ERROR ->
-                    Timber.v(it.message, "ErrorLog")
+                    Resource.Status.ERROR ->
+                        Timber.v(it.message, "ErrorLog")
 
-                Resource.Status.LOADING -> countryDetailBinding.countryDetailsShimmerFL?.startShimmerAnimation()
-            }
-        })
+                    Resource.Status.LOADING -> countryDetailBinding.countryDetailsShimmerFL?.startShimmerAnimation()
+                }
+            })
     }
 
     private fun bindAirpollutionData(airPollution: AirPollution) {
 
-        if (airPollution.list.isEmpty()) {
-            countryDetailBinding.airPollutionLinear.visibility = View.GONE
-        } else {
+        if (airPollution.list.isNotEmpty()) {
+            countryDetailBinding.airPollutionLinear.visibility = View.VISIBLE
+
             if (airPollution.list[0].components.co.equals(0.0)) {
                 countryDetailBinding.carbonText.visibility = View.GONE
                 countryDetailBinding.carbonData.visibility = View.GONE
             } else {
-                countryDetailBinding.carbonData.text = airPollution.list[0].components.co.toString()+ " μg/m3"
+                countryDetailBinding.carbonData.text =
+                    airPollution.list[0].components.co.toString() + " μg/m3"
             }
 
             if (airPollution.list[0].components.no2.equals(0.0)) {
                 countryDetailBinding.nitrogenText.visibility = View.GONE
                 countryDetailBinding.nitrogenData.visibility = View.GONE
             } else {
-                countryDetailBinding.nitrogenData.text = airPollution.list[0].components.no2.toString()+ " μg/m3"
+                countryDetailBinding.nitrogenData.text =
+                    airPollution.list[0].components.no2.toString() + " μg/m3"
             }
 
             if (airPollution.list[0].components.o3.equals(0.0)) {
                 countryDetailBinding.ozoneText.visibility = View.GONE
                 countryDetailBinding.ozoneData.visibility = View.GONE
             } else {
-                countryDetailBinding.ozoneData.text = airPollution.list[0].components.o3.toString()+ " μg/m3"
+                countryDetailBinding.ozoneData.text =
+                    airPollution.list[0].components.o3.toString() + " μg/m3"
             }
 
             if (airPollution.list[0].components.so2.equals(0.0)) {
                 countryDetailBinding.sulphurText.visibility = View.GONE
                 countryDetailBinding.sulphurData.visibility = View.GONE
             } else {
-                countryDetailBinding.sulphurData.text = airPollution.list[0].components.so2.toString() + " μg/m3"
+                countryDetailBinding.sulphurData.text =
+                    airPollution.list[0].components.so2.toString() + " μg/m3"
             }
         }
     }

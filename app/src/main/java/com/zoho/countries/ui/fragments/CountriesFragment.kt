@@ -29,6 +29,7 @@ import com.google.android.gms.location.LocationServices
 import com.zoho.countries.CountriesAdapter
 import com.zoho.countries.R
 import com.zoho.countries.databinding.FragmentCountriesBinding
+import com.zoho.countries.datasource.local.entities.ItemData
 import com.zoho.countries.datasource.local.entities.country.Countries
 import com.zoho.countries.utils.Resource
 import com.zoho.countries.utils.autoCleared
@@ -43,7 +44,6 @@ class CountriesFragment : Fragment(), CountriesAdapter.CountryItemListener {
     private val viewModel: CountriesViewModel by viewModels()
     private lateinit var countriesAdapter: CountriesAdapter
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    var checkPermission: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -84,6 +84,7 @@ class CountriesFragment : Fragment(), CountriesAdapter.CountryItemListener {
                         countriesBinding.countriesRecyclerView?.visibility = View.VISIBLE
                         countriesAdapter.submitList(it.data)
                         checkLocationPermission()
+                        Timber.v("weatherchecker1 : 1")
                     }
                 }
                 Resource.Status.ERROR -> Toast.makeText(
@@ -128,22 +129,26 @@ class CountriesFragment : Fragment(), CountriesAdapter.CountryItemListener {
 
     private fun checkLocationPermission() {
 
-        if (!checkPermission) {
-            return
-        }
-        checkPermission = false
-
         val permission = ContextCompat.checkSelfPermission(
             requireContext(),
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
         if (permission != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(
-                arrayOf(
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ), LOCATION_PERMISSION_REQUEST
-            )
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this.requireActivity(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            ) {
+                Timber.v("Permission Denied")
+            } else {
+                requestPermissions(
+                    arrayOf(
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    ), LOCATION_PERMISSION_REQUEST
+                )
+            }
         } else {
             getCurrentLocation()
         }
@@ -182,6 +187,7 @@ class CountriesFragment : Fragment(), CountriesAdapter.CountryItemListener {
     }
 
     private fun checkGPSEnabled(): Boolean {
+
         if (!isLocationEnabled()) {
             showAlert()
         }
@@ -189,6 +195,7 @@ class CountriesFragment : Fragment(), CountriesAdapter.CountryItemListener {
     }
 
     private fun isLocationEnabled(): Boolean {
+
         var locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager!!.isProviderEnabled(
             LocationManager.NETWORK_PROVIDER
@@ -200,7 +207,6 @@ class CountriesFragment : Fragment(), CountriesAdapter.CountryItemListener {
         dialog.setTitle("Location permission needed")
             .setMessage("This app requires GPS to be enabled to get the weather information. Do you want to enable now?")
             .setPositiveButton("Location Settings") { paramDialogInterface, paramInt ->
-                checkPermission = true
                 val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                 startActivity(intent)
             }
@@ -217,7 +223,7 @@ class CountriesFragment : Fragment(), CountriesAdapter.CountryItemListener {
             when (it.status) {
                 Resource.Status.SUCCESS -> {
                     it.data?.let {
-                        Timber.v(""+it)
+                        Timber.v("getWeatherData : " + it)
                         val degree = it.main?.temp.toInt()
                         val description = it.weather[0].description.capitalizeWords()
                         val city = it.name
@@ -237,11 +243,11 @@ class CountriesFragment : Fragment(), CountriesAdapter.CountryItemListener {
     override fun onClickedCountry(countryName: String, latlng: List<Double>) {
         countriesBinding.searchCountries.clearFocus()
 
-        Timber.v("latlngList : " + latlng)
+        val itemData = ItemData(countryName, latlng[0], latlng[1])
 
         findNavController().navigate(
             R.id.action_countriesFragment_to_countryDetailFragment,
-            bundleOf("countryName" to countryName, "latlng" to latlng)
+            bundleOf("itemData" to itemData)
         )
     }
 
@@ -261,10 +267,6 @@ class CountriesFragment : Fragment(), CountriesAdapter.CountryItemListener {
 
     override fun onResume() {
         super.onResume()
-        if (checkPermission) {
-            checkLocationPermission()
-        }
-        checkPermission = true
     }
 
     companion object {

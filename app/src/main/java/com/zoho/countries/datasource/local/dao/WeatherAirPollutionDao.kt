@@ -12,7 +12,7 @@ import com.zoho.countries.datasource.local.entities.weather.Weather
 interface WeatherAirPollutionDao {
 
     //Weather
-    @Query("SELECT * FROM weather")
+    @Query("SELECT * FROM weather limit 1")
     fun getWeatherData(): LiveData<Weather>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

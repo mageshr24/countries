@@ -121,10 +121,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/normal_100"
             android:layout_marginTop="@dimen/small_75"
-            android:layout_marginRight="@dimen/normal_100"
-            android:layout_marginBottom="@dimen/small_100"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -140,6 +137,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
+                <include layout="@layout/item_shimmer_placeholder" />
+
+                <include layout="@layout/item_shimmer_placeholder" />
 
                 <include layout="@layout/item_shimmer_placeholder" />
 
