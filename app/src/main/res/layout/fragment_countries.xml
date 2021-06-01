@@ -96,7 +96,7 @@
             </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.AppBarLayout>
-        l
+
         <SearchView
             android:id="@+id/searchCountries"
             android:layout_width="match_parent"
